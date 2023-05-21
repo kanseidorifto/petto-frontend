@@ -15,7 +15,7 @@ const options = [
 	{
 		icon: <RectangleStackIcon className="w-6 h-6" />,
 		label: 'Стрічка новин',
-		href: '',
+		href: '/feed',
 	},
 	{
 		icon: <MagnifyingGlassIcon className="w-6 h-6" />,

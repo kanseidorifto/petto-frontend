@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
-import Post from '../components/Post';
+import Post from '../components/Post/Post';
 import ProfileHeader from '../components/Profile/ProfileHeader';
 import ProfilePetCard from '../components/Profile/ProfilePetCard';
-import CreatePostModal from '../components/CreatePostModal';
+import CreatePostModal from '../components/Post/CreatePostModal';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
 	const [showModal, setShowModal] = useState({ show: false });
@@ -46,9 +47,11 @@ const Profile = () => {
 								<ProfilePetCard />
 							</div>
 							<div className="text-center">
-								<button className="w-64 bg-violet-600 text-white text-xs leading-none p-2.5 rounded-xl">
+								<Link
+									to={'/pets'}
+									className="w-64 bg-violet-600 text-white text-xs leading-none p-2.5 rounded-xl">
 									Переглянути більше
-								</button>
+								</Link>
 							</div>
 						</div>
 					</aside>
