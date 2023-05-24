@@ -20,7 +20,7 @@ const options = [
 	{
 		icon: <MagnifyingGlassIcon className="w-6 h-6" />,
 		label: 'Пошук',
-		href: '',
+		href: '/search',
 	},
 	{
 		icon: <UserGroupIcon className="w-6 h-6" />,

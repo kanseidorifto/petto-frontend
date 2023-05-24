@@ -22,9 +22,9 @@ const PetProfile = () => {
 						</div>
 						<div className="w-96 h-96">
 							<img
-								src="https://www.purina.co.uk/sites/default/files/styles/square_medium_440x440/public/2022-06/Siberian%20Forest.2.jpg?h=ac023024&itok=B1W2TQ2l"
+								src="https://cdn.discordapp.com/attachments/905893715170697216/1096881731530920077/image.png"
 								alt="petAvatar"
-								className="w-full h-full"
+								className="w-full h-full object-cover"
 							/>
 						</div>
 						<div className="text-center">

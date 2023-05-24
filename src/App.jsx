@@ -6,6 +6,7 @@ import MainLayout from './layouts/MainLayout';
 import Feed from './pages/Feed';
 import Pets from './pages/Pets';
 import PetProfile from './pages/PetProfile';
+import Search from './pages/Search';
 
 function App() {
 	return (
@@ -16,6 +17,7 @@ function App() {
 				<Route path="/feed/*" element={<Feed />} />
 				<Route path="/pets/*" element={<Pets />} />
 				<Route path="/pets/:petId" element={<PetProfile />} />
+				<Route path="/search" element={<Search />} />
 			</Route>
 			<Route path="*" element={<Navigate to={'/profile'} />} />
 		</Routes>
