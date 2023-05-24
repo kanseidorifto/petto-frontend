@@ -9,6 +9,8 @@ import PetProfile from './pages/PetProfile';
 import Search from './pages/Search';
 import Friends from './pages/Friends';
 import FriendListLayout from './layouts/FriendListLayout';
+import Settings from './pages/Settings';
+import SettingsLayout from './layouts/SettingsLayout';
 
 function App() {
 	return (
@@ -23,6 +25,9 @@ function App() {
 			</Route>
 			<Route element={<FriendListLayout />}>
 				<Route path="/friends/*" element={<Friends />} />
+			</Route>
+			<Route element={<SettingsLayout />}>
+				<Route path="/settings/*" element={<Settings />} />
 			</Route>
 			<Route path="*" element={<Navigate to={'/profile'} />} />
 		</Routes>

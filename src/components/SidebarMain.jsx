@@ -3,6 +3,7 @@ import {
 	RectangleStackIcon,
 	MagnifyingGlassIcon,
 	UserGroupIcon,
+	Cog8ToothIcon,
 } from '@heroicons/react/24/outline';
 import { NavLink } from 'react-router-dom';
 
@@ -26,6 +27,11 @@ const options = [
 		icon: <UserGroupIcon className="w-6 h-6" />,
 		label: 'Друзі',
 		href: '/friends',
+	},
+	{
+		icon: <Cog8ToothIcon className="w-6 h-6" />,
+		label: 'Налаштування',
+		href: '/settings',
 	},
 ];
 
