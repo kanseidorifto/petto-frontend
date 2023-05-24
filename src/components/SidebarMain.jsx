@@ -25,7 +25,7 @@ const options = [
 	{
 		icon: <UserGroupIcon className="w-6 h-6" />,
 		label: 'Друзі',
-		href: '',
+		href: '/friends',
 	},
 ];
 

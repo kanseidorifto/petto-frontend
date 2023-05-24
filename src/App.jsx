@@ -7,6 +7,7 @@ import Feed from './pages/Feed';
 import Pets from './pages/Pets';
 import PetProfile from './pages/PetProfile';
 import Search from './pages/Search';
+import Friends from './pages/Friends';
 
 function App() {
 	return (
@@ -18,6 +19,7 @@ function App() {
 				<Route path="/pets/*" element={<Pets />} />
 				<Route path="/pets/:petId" element={<PetProfile />} />
 				<Route path="/search" element={<Search />} />
+				<Route path="/friends/*" element={<Friends />} />
 			</Route>
 			<Route path="*" element={<Navigate to={'/profile'} />} />
 		</Routes>
