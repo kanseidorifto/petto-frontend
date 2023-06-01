@@ -11,25 +11,29 @@ import Friends from './pages/Friends';
 import FriendListLayout from './layouts/FriendListLayout';
 import Settings from './pages/Settings';
 import SettingsLayout from './layouts/SettingsLayout';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
 	return (
 		<Routes>
 			<Route path="/sign-in" element={<Login />} />
-			<Route element={<MainLayout />}>
-				<Route path="/profile/*" element={<Profile />} />
-				<Route path="/feed/*" element={<Feed />} />
-				<Route path="/pets/*" element={<Pets />} />
-				<Route path="/pets/:petId" element={<PetProfile />} />
-				<Route path="/search" element={<Search />} />
+			<Route element={<ProtectedRoute />}>
+				<Route element={<MainLayout />}>
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/profile/:id" element={<Profile />} />
+					<Route path="/feed/*" element={<Feed />} />
+					<Route path="/pets/*" element={<Pets />} />
+					<Route path="/pets/:petId" element={<PetProfile />} />
+					<Route path="/search" element={<Search />} />
+				</Route>
+				<Route element={<FriendListLayout />}>
+					<Route path="/friends/*" element={<Friends />} />
+				</Route>
+				<Route element={<SettingsLayout />}>
+					<Route path="/settings/*" element={<Settings />} />
+				</Route>
+				<Route path="*" element={<Navigate to={'/profile'} />} />
 			</Route>
-			<Route element={<FriendListLayout />}>
-				<Route path="/friends/*" element={<Friends />} />
-			</Route>
-			<Route element={<SettingsLayout />}>
-				<Route path="/settings/*" element={<Settings />} />
-			</Route>
-			<Route path="*" element={<Navigate to={'/profile'} />} />
 		</Routes>
 	);
 }

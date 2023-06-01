@@ -1,12 +1,18 @@
 import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RegisterModal from '../components/RegisterModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { userLogin } from '../redux/auth/authActions';
 
 Modal.setAppElement('#root');
 
 const Login = () => {
 	const [showModal, setShowModal] = useState({ show: false });
+	const { loading, userInfo, error } = useSelector((state) => state.auth);
+	const dispatch = useDispatch();
+
 	const {
 		register,
 		handleSubmit,
@@ -20,8 +26,18 @@ const Login = () => {
 		mode: 'onSubmit',
 		// shouldUseNativeValidation: true,
 	});
+	const navigate = useNavigate();
+
+	// redirect authenticated user to profile screen
+	useEffect(() => {
+		if (userInfo) {
+			navigate('/profile');
+		}
+	}, [navigate, userInfo]);
+
 	const onSubmit = async (values) => {
 		console.log('Login', values);
+		dispatch(userLogin(values));
 	};
 	const openModal = () => {
 		setShowModal({ show: true });

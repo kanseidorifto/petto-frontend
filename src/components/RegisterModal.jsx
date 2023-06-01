@@ -1,8 +1,16 @@
 import Modal from 'react-modal';
 import { useForm } from 'react-hook-form';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUser } from '../redux/auth/authActions';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
+	const { loading, userInfo, error, success } = useSelector((state) => state.auth);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+
 	const {
 		register,
 		handleSubmit,
@@ -28,9 +36,19 @@ const RegisterModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 
 	const onSubmit = async (values) => {
 		console.log(values);
-		closeOrderModal();
+		if (values.password !== values.repeatPassword) {
+			alert('Password mismatch');
+		}
+		values.email = values.email.toLowerCase();
+		dispatch(registerUser(values));
 	};
 
+	useEffect(() => {
+		// redirect user to login page if registration was successful
+		if (success) closeOrderModal();
+		// redirect authenticated user to profile screen
+		if (userInfo) navigate('/profile');
+	}, [navigate, userInfo, success]);
 	return (
 		<Modal
 			closeTimeoutMS={250}
@@ -83,8 +101,9 @@ const RegisterModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 				/>
 				<button
 					type="submit"
+					disabled={loading}
 					className="p-4 text-white border rounded-md border-amber-500 bg-amber-400">
-					Зареєструватись
+					{loading ? 'Зачекайте...' : 'Зареєструватись'}
 				</button>
 			</form>
 			{/* </div> */}

@@ -4,10 +4,28 @@ import Post from '../components/Post/Post';
 import ProfileHeader from '../components/Profile/ProfileHeader';
 import ProfilePetCard from '../components/Profile/ProfilePetCard';
 import CreatePostModal from '../components/Post/CreatePostModal';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useGetUserDetailsQuery } from '../services/authService';
 
 const Profile = () => {
+	const { id } = useParams();
 	const [showModal, setShowModal] = useState({ show: false });
+	const { userInfo } = useSelector((state) => state.auth);
+
+	const own = userInfo._id === id || !id;
+	const profileId = own ? userInfo._id : id;
+
+	const { data, isLoading, isError, error } = useGetUserDetailsQuery(profileId);
+
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
+
+	if (isError) {
+		return <div className="text-red-700">Error {error.status}</div>;
+	}
+
 	const openModal = () => {
 		setShowModal({ show: true });
 	};
@@ -15,9 +33,10 @@ const Profile = () => {
 	const closeModal = () => {
 		setShowModal({ show: false });
 	};
+
 	return (
 		<>
-			<ProfileHeader />
+			<ProfileHeader {...data} own={own} />
 			<div className="flex space-x-4 max-lg:flex-col-reverse ">
 				<main className="">
 					<div className="flex items-center justify-between px-6 py-4 text-white bg-violet-500 rounded-t-md">
