@@ -10,7 +10,7 @@ const ProfileHeader = ({ givenName, surname, bio, avatarUrl, coverUrl, own }) =>
 		<div>
 			<div className="w-full rounded-md bg-violet-400">
 				<div
-					className="h-56 bg-center bg-no-repeat bg-cover"
+					className="h-56 bg-center bg-no-repeat bg-cover rounded-t-md"
 					style={{ backgroundImage: `url('${coverUrl}')` }}></div>
 				<div className="flex p-6 space-x-4 text-white rounded-md ProfileInfo bg-violet-500">
 					<div className=" -mt-36">

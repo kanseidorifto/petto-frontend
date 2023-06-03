@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
-import Post from '../components/Post/Post';
 import ProfileHeader from '../components/Profile/ProfileHeader';
 import ProfilePetCard from '../components/Profile/ProfilePetCard';
 import CreatePostModal from '../components/Post/CreatePostModal';
 import { Link, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useGetUserDetailsQuery } from '../services/authService';
+import { useGetUserPetListQuery } from '../services/petService';
+import PostList from '../components/Post/PostList';
 
 const Profile = () => {
 	const { id } = useParams();
@@ -16,14 +17,15 @@ const Profile = () => {
 	const own = userInfo._id === id || !id;
 	const profileId = own ? userInfo._id : id;
 
-	const { data, isLoading, isError, error } = useGetUserDetailsQuery(profileId);
+	const profileInfo = useGetUserDetailsQuery(profileId);
 
-	if (isLoading) {
+	const profilePetList = useGetUserPetListQuery(profileId);
+
+	if (profileInfo.isFetching || profilePetList.isFetching) {
 		return <div>Loading...</div>;
 	}
-
-	if (isError) {
-		return <div className="text-red-700">Error {error.status}</div>;
+	if (profileInfo.isError) {
+		return <div className="text-red-700">Error {profileInfo.error.status}</div>;
 	}
 
 	const openModal = () => {
@@ -36,21 +38,21 @@ const Profile = () => {
 
 	return (
 		<>
-			<ProfileHeader {...data} own={own} />
+			<ProfileHeader {...profileInfo.data} own={own} />
 			<div className="flex space-x-4 max-lg:flex-col-reverse ">
-				<main className="">
+				<main className="flex-1">
 					<div className="flex items-center justify-between px-6 py-4 text-white bg-violet-500 rounded-t-md">
 						<h2 className="text-base font-medium">Дописи</h2>
-						<button
-							onClick={openModal}
-							className="rounded-full leading-none font-semibold text-xs py-1.5 px-2.5 bg-amber-500">
-							Створити новий допис
-						</button>
+						{own && (
+							<button
+								onClick={openModal}
+								className="rounded-full leading-none font-semibold text-xs py-1.5 px-2.5 bg-amber-500">
+								Створити новий допис
+							</button>
+						)}
 					</div>
 					<div className="space-y-4 [&>*:first-child]:rounded-t-none">
-						<Post />
-						<Post />
-						<Post />
+						<PostList profileId={profileId} own={own} />
 					</div>
 				</main>
 				<div>
@@ -59,12 +61,17 @@ const Profile = () => {
 							<h2 className="text-base font-medium">Улюбленці користувача</h2>
 						</div>
 						<div className="p-4 space-y-4">
-							<div className="grid grid-cols-[1fr,1fr] gap-4">
-								<ProfilePetCard />
-								<ProfilePetCard />
-								<ProfilePetCard />
-								<ProfilePetCard />
-							</div>
+							{profilePetList.data.length > 0 ? (
+								<div className="grid grid-cols-[1fr,1fr] gap-4">
+									{profilePetList.data.slice(0, 4).map((pet) => (
+										<ProfilePetCard key={pet._id} {...pet} />
+									))}
+								</div>
+							) : (
+								<p className="inline-block p-1.5 text-center text-white text-md">
+									Жодного улюбленця 😿
+								</p>
+							)}
 							<div className="text-center">
 								<Link
 									to={'/pets'}
@@ -76,7 +83,7 @@ const Profile = () => {
 					</aside>
 				</div>
 			</div>
-			<CreatePostModal modalIsOpen={showModal} closeModal={closeModal} />
+			{own && <CreatePostModal modalIsOpen={showModal} closeModal={closeModal} />}
 		</>
 	);
 };

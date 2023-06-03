@@ -5,14 +5,17 @@ import RegisterModal from '../components/RegisterModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { userLogin } from '../redux/auth/authActions';
+import { useGetOwnerDetailsQuery } from '../services/authService';
 
 Modal.setAppElement('#root');
 
 const Login = () => {
 	const [showModal, setShowModal] = useState({ show: false });
-	const { loading, userInfo, error } = useSelector((state) => state.auth);
+	const { loading, userToken, error } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
-
+	const { data, isFetching, isError } = useGetOwnerDetailsQuery(null, {
+		pollingInterval: 900000, // 15mins
+	});
 	const {
 		register,
 		handleSubmit,
@@ -30,10 +33,10 @@ const Login = () => {
 
 	// redirect authenticated user to profile screen
 	useEffect(() => {
-		if (userInfo) {
+		if (!isFetching && !isError) {
 			navigate('/profile');
 		}
-	}, [navigate, userInfo]);
+	}, [navigate, isError, isFetching]);
 
 	const onSubmit = async (values) => {
 		console.log('Login', values);

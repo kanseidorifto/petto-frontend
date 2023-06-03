@@ -3,8 +3,9 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const backendURL = process.env.REACT_APP_API_URL;
 
-export const authApi = createApi({
-	reducerPath: 'authApi',
+export const petApi = createApi({
+	reducerPath: 'petApi',
+	tagTypes: ['Pets'],
 	baseQuery: fetchBaseQuery({
 		// base url of backend API
 		baseUrl: backendURL,
@@ -19,21 +20,24 @@ export const authApi = createApi({
 		},
 	}),
 	endpoints: (builder) => ({
-		getOwnerDetails: builder.query({
+		getMyPetList: builder.query({
 			query: () => ({
-				url: '/user/me',
+				url: `/pet/me`,
 				method: 'GET',
 			}),
+			// providesTags: () => [{ type: 'Post', id: 'LIST' }],
 		}),
-		getUserDetails: builder.query({
+		getUserPetList: builder.query({
 			query: (id) => ({
-				url: `/user/${id}`,
+				url: `/pet/user/`,
 				method: 'GET',
+				params: { id },
 			}),
+			// providesTags: () => [{ type: 'Post', id: 'LIST' }],
 		}),
 	}),
 });
 
 // export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetOwnerDetailsQuery, useGetUserDetailsQuery } = authApi;
+export const { useGetMyPetListQuery, useGetUserPetListQuery } = petApi;

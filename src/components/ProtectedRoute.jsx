@@ -8,8 +8,8 @@ const ProtectedRoute = () => {
 	const { userToken, userInfo } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 
-	const { data, isLoading, isError } = useGetOwnerDetailsQuery(null, {
-		pollingInterval: 900000, // 15mins
+	const { data, isFetching, isError } = useGetOwnerDetailsQuery(null, {
+		pollingInterval: 0, // 15mins
 	});
 
 	useEffect(() => {
@@ -18,13 +18,13 @@ const ProtectedRoute = () => {
 		}
 	}, [data, dispatch]);
 
-	if (isLoading || !userInfo) {
-		return <div>Loading...</div>;
-	}
-
 	if (!userToken || isError) {
 		dispatch(logout);
 		return <Navigate to={'/sign-in'} replace={true} />;
+	}
+
+	if (isFetching || !userInfo) {
+		return <div>Loading...</div>;
 	}
 
 	return <Outlet />;
