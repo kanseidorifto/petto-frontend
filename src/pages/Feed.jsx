@@ -31,12 +31,13 @@ const Option = ({ label, href }) => {
 const Feed = () => {
 	return (
 		<div className="flex space-x-4 max-lg:flex-col-reverse ">
-			<div className="space-y-4">
-				<Post />
-				<Post />
-				<Post />
-				<Post />
-			</div>
+			<main className="flex-1 space-y-4">
+				<section className="text-white rounded-md bg-violet-400">
+					<p className="px-6 py-10 text-lg font-medium text-center">
+						{true ? 'Завантаження... 🏃‍♂️' : 'Схоже у вас поки немає дописів 😿'}
+					</p>
+				</section>
+			</main>
 			<div>
 				<aside className="inline-block w-64 text-white rounded-md bg-violet-400">
 					<nav>
