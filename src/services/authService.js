@@ -1,29 +1,14 @@
-// React-specific entry point to allow generating React hooks
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { baseApi } from './baseService';
 
-const backendURL = process.env.REACT_APP_API_URL;
-
-export const authApi = createApi({
+export const authApi = baseApi.injectEndpoints({
 	reducerPath: 'authApi',
-	baseQuery: fetchBaseQuery({
-		// base url of backend API
-		baseUrl: backendURL,
-		// prepareHeaders is used to configure the header of every request and gives access to getState which we use to include the token from the store
-		prepareHeaders: (headers, { getState }) => {
-			const token = getState().auth.userToken;
-			if (token) {
-				// include token in req header
-				headers.set('authorization', `Bearer ${token}`);
-				return headers;
-			}
-		},
-	}),
 	endpoints: (builder) => ({
 		getOwnerDetails: builder.query({
 			query: () => ({
 				url: '/user/me',
 				method: 'GET',
 			}),
+			providesTags: [{ type: 'Auth', id: 'userProfileDetails' }],
 		}),
 		getUserDetails: builder.query({
 			query: (id) => ({
@@ -31,9 +16,18 @@ export const authApi = createApi({
 				method: 'GET',
 			}),
 		}),
+		updateUserDetails: builder.mutation({
+			query: (details) => ({
+				url: `/user/me`,
+				method: 'PATCH',
+				body: details,
+			}),
+			invalidatesTags: [{ type: 'Auth', id: 'userProfileDetails' }],
+		}),
 	}),
 });
 
 // export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetOwnerDetailsQuery, useGetUserDetailsQuery } = authApi;
+export const { useGetOwnerDetailsQuery, useGetUserDetailsQuery, useUpdateUserDetailsMutation } =
+	authApi;

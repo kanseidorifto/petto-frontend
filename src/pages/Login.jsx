@@ -33,10 +33,10 @@ const Login = () => {
 
 	// redirect authenticated user to profile screen
 	useEffect(() => {
-		if (!isFetching && !isError) {
+		if (!isFetching && !isError && userToken) {
 			navigate('/profile');
 		}
-	}, [navigate, isError, isFetching]);
+	}, [navigate, isError, isFetching, userToken]);
 
 	const onSubmit = async (values) => {
 		console.log('Login', values);

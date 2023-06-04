@@ -1,24 +1,7 @@
-// React-specific entry point to allow generating React hooks
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { baseApi } from './baseService';
 
-const backendURL = process.env.REACT_APP_API_URL;
-
-export const petApi = createApi({
+export const petApi = baseApi.injectEndpoints({
 	reducerPath: 'petApi',
-	tagTypes: ['Pets'],
-	baseQuery: fetchBaseQuery({
-		// base url of backend API
-		baseUrl: backendURL,
-		// prepareHeaders is used to configure the header of every request and gives access to getState which we use to include the token from the store
-		prepareHeaders: (headers, { getState }) => {
-			const token = getState().auth.userToken;
-			if (token) {
-				// include token in req header
-				headers.set('authorization', `Bearer ${token}`);
-				return headers;
-			}
-		},
-	}),
 	endpoints: (builder) => ({
 		getMyPetList: builder.query({
 			query: () => ({

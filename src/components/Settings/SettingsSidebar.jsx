@@ -5,10 +5,10 @@ const options = [
 		label: 'Редагувати профіль',
 		href: '/settings/profile',
 	},
-	{
-		label: 'Безпека',
-		href: '/settings/security',
-	},
+	// {
+	// 	label: 'Безпека',
+	// 	href: '/settings/security',
+	// },
 	{
 		label: 'Вийти з облікового запису',
 		href: '/settings/sign-out',

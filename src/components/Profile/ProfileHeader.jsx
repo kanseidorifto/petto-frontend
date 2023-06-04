@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
+const backendURL = process.env.REACT_APP_API_URL;
+
 const ProfileHeader = ({ givenName, surname, bio, avatarUrl, coverUrl, own }) => {
 	const navigate = useNavigate();
 
@@ -10,13 +12,13 @@ const ProfileHeader = ({ givenName, surname, bio, avatarUrl, coverUrl, own }) =>
 		<div>
 			<div className="w-full rounded-md bg-violet-400">
 				<div
-					className="h-56 bg-center bg-no-repeat bg-cover rounded-t-md"
-					style={{ backgroundImage: `url('${coverUrl}')` }}></div>
+					className="bg-center bg-no-repeat bg-cover shadow-inner select-none h-80 rounded-t-md"
+					style={{ backgroundImage: `url('${backendURL + coverUrl}')` }}></div>
 				<div className="flex p-6 space-x-4 text-white rounded-md ProfileInfo bg-violet-500">
-					<div className=" -mt-36">
+					<div className="select-none -mt-36">
 						<img
-							className="w-48 h-48 bg-white border rounded-full border-amber-300"
-							src={avatarUrl}
+							className="w-48 h-48 bg-white rounded-full shadow-md border-amber-300"
+							src={backendURL + avatarUrl}
 							alt="avatar"
 						/>
 					</div>

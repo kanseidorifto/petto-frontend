@@ -62,7 +62,6 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 		mediaList.forEach((file) => formData.append('mediaList', file));
 		formData.append('taggedPetList', JSON.stringify(taggedPetList));
 		createPost(formData);
-		console.log(createPost, formData);
 		closeOrderModal();
 	};
 
@@ -92,6 +91,7 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 					onChange={(e) => {
 						uploader(e);
 					}}
+					accept="image/png,image/jpeg,image/gif"
 				/>
 				{mediaDisplayList.length <= 0 ? (
 					<button

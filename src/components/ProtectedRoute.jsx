@@ -8,15 +8,15 @@ const ProtectedRoute = () => {
 	const { userToken, userInfo } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 
-	const { data, isFetching, isError } = useGetOwnerDetailsQuery(null, {
+	const { data, isFetching, isError, isSuccess } = useGetOwnerDetailsQuery(null, {
 		pollingInterval: 0, // 15mins
 	});
 
 	useEffect(() => {
-		if (data) {
+		if (data && isSuccess) {
 			dispatch(setCredentials(data));
 		}
-	}, [data, dispatch]);
+	}, [data, isSuccess, dispatch]);
 
 	if (!userToken || isError) {
 		dispatch(logout);

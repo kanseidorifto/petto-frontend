@@ -56,7 +56,7 @@ const Post = ({ _id, profileId }) => {
 			<div className="flex items-center px-6 py-4 space-x-2">
 				<Link to={'/profile/' + profile?._id} className="font-black">
 					<img
-						src={profile?.avatarUrl}
+						src={backendURL + profile?.avatarUrl}
 						alt="avatar"
 						className="w-10 h-10 bg-white rounded-full select-none"
 					/>
@@ -66,20 +66,22 @@ const Post = ({ _id, profileId }) => {
 						<Link to={'/profile/' + profile?._id} className="font-black">
 							<p className="text-sm font-semibold">{profile.givenName + ' ' + profile.surname}</p>
 						</Link>
-						<p className="text-sm font-light text-neutral-300">
+						<p className="text-sm font-light text-neutral-200">
 							{dayjs(createdAt).format('DD/MM/YYYY H:mm')}
 						</p>
 					</div>
 					<div>
-						<Popup
-							trigger={
-								<button>
-									<EllipsisVerticalIcon className="w-6 h-6" />
-								</button>
-							}
-							position="bottom right">
-							<PostPopup own={own} postId={_id} />
-						</Popup>
+						{own && (
+							<Popup
+								trigger={
+									<button>
+										<EllipsisVerticalIcon className="w-6 h-6" />
+									</button>
+								}
+								position="bottom right">
+								<PostPopup own={own} postId={_id} />
+							</Popup>
+						)}
 					</div>
 				</div>
 			</div>
@@ -116,7 +118,6 @@ const Post = ({ _id, profileId }) => {
 				</div>
 				<div className="">
 					{commentsWork.length > 0 &&
-						// console.log(commentsWork) &&
 						commentsWork
 							.sort((a, b) => (dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? 1 : -1))
 							.slice(0, 4)
@@ -125,7 +126,7 @@ const Post = ({ _id, profileId }) => {
 									<div className="flex space-x-2" key={comment._id}>
 										<Link to={'/profile/' + comment.profile?._id} className="font-black">
 											<img
-												src={comment.profile?.avatarUrl}
+												src={backendURL + comment.profile?.avatarUrl}
 												alt="avatar"
 												className="w-8 h-8 bg-white rounded-full select-none"
 											/>
@@ -137,7 +138,7 @@ const Post = ({ _id, profileId }) => {
 														{comment.profile?.givenName + ' ' + comment.profile?.surname}
 													</p>
 												</Link>
-												<p className="text-sm font-light text-neutral-300">
+												<p className="text-sm font-light text-neutral-200">
 													{dayjs(comment.createdAt).format('H:mm DD/MM/YYYY')}
 												</p>
 											</div>
@@ -162,7 +163,11 @@ const Post = ({ _id, profileId }) => {
 					</div>
 				)}
 				<div className="flex items-center space-x-2">
-					<img src={profile?.avatarUrl} alt="avatar" className="w-10 h-10 bg-white rounded-full" />
+					<img
+						src={backendURL + userInfo?.avatarUrl}
+						alt="avatar"
+						className="w-10 h-10 bg-white rounded-full"
+					/>
 					<TextareaAutosize
 						className="flex-1 p-1 text-base bg-transparent rounded appearance-none resize-none placeholder:text-white placeholder:font-light focus:bg-violet-300/50 focus:outline-none focus:border-none focus:ring-none"
 						value={commentText}
