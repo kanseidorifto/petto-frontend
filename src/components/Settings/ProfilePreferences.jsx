@@ -4,8 +4,6 @@ import ChangePhotoModal from './ChangePhotoModal';
 import { useState } from 'react';
 import { useGetOwnerDetailsQuery, useUpdateUserDetailsMutation } from '../../services/authService';
 
-const backendURL = process.env.REACT_APP_API_URL;
-
 const ProfilePreferences = () => {
 	const profile = useGetOwnerDetailsQuery();
 	const [updateProfile] = useUpdateUserDetailsMutation();
@@ -73,7 +71,7 @@ const ProfilePreferences = () => {
 					<div className="relative w-32 h-32 col-span-2">
 						{(profile.data.avatarUrl !== '' || newAvatar) && (
 							<img
-								src={newAvatar ? newAvatar : backendURL + profile.data.avatarUrl}
+								src={newAvatar ? newAvatar : profile.data.avatarUrl}
 								alt="Avatar"
 								className="w-32 h-32 rounded-full max-w-none bg-violet-700"
 							/>
@@ -94,7 +92,7 @@ const ProfilePreferences = () => {
 					<div className="relative h-32 col-span-2 w-96">
 						{(profile.data.coverUrl !== '' || newCover) && (
 							<img
-								src={newCover ? newCover : backendURL + profile.data.coverUrl}
+								src={newCover ? newCover : profile.data.coverUrl}
 								alt="Header"
 								className="object-contain h-32 rounded-md w-96 max-w-none bg-violet-700"
 							/>

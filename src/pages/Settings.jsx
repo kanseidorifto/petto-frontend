@@ -1,9 +1,16 @@
+import { useEffect } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import ProfilePreferences from '../components/Settings/ProfilePreferences';
 import SecurityPreferences from '../components/Settings/SecurityPreferences';
 import LeavePreferences from '../components/Settings/LeavePreferences';
 
 const Settings = () => {
+	useEffect(() => {
+		document.title = 'Petto - Налаштування';
+		return () => {
+			document.title = 'Petto';
+		};
+	}, []);
 	return (
 		<Routes>
 			<Route path="/profile" element={<ProfilePreferences />} />

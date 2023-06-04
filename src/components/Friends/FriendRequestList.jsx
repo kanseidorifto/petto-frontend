@@ -1,10 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 
 const FriendRequestList = () => {
 	const [searchText, setSearchText] = useState('');
 	const [activeTab, setActiveTab] = useState(0);
+	useEffect(() => {
+		let tab;
+		switch (activeTab) {
+			case 0:
+				tab = 'Вхідні запити';
+				break;
+			case 1:
+				tab = 'Відправлені запити';
+				break;
+			default:
+				tab = '';
+				break;
+		}
+		document.title = 'Petto - ' + tab;
+		return () => {
+			document.title = 'Petto';
+		};
+	}, [activeTab]);
 
 	return (
 		<main className="rounded-md bg-violet-400">

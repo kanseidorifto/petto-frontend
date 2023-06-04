@@ -1,9 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import PetCard from '../components/Pets/PetCard';
 import CreatePetModal from '../components/Pets/CreatePetModal';
 
 const Pets = () => {
+	useEffect(() => {
+		document.title = 'Petto - Улюбленці';
+		return () => {
+			document.title = 'Petto';
+		};
+	}, []);
 	const [showModal, setShowModal] = useState({ show: false });
 	const openModal = () => {
 		setShowModal({ show: true });
@@ -19,7 +25,7 @@ const Pets = () => {
 					<h2 className="text-base font-medium">Улюбленці користувача</h2>
 					<button
 						onClick={openModal}
-						className="rounded-full leading-none font-semibold text-xs py-2 px-4 bg-violet-700">
+						className="px-4 py-2 text-xs font-semibold leading-none rounded-full bg-violet-700">
 						Додати
 					</button>
 				</div>

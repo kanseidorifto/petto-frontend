@@ -1,11 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 
 const Search = () => {
 	const [searchText, setSearchText] = useState('');
 	const [activeTab, setActiveTab] = useState(0);
-
+	useEffect(() => {
+		let tab;
+		switch (activeTab) {
+			case 0:
+				tab = 'людей';
+				break;
+			case 1:
+				tab = 'улюбленців';
+				break;
+			default:
+				tab = '';
+				break;
+		}
+		document.title = 'Petto - Пошук ' + tab;
+		return () => {
+			document.title = 'Petto';
+		};
+	}, [activeTab]);
 	return (
 		<main className="rounded-md bg-violet-400">
 			<div className="flex items-center px-6 py-3 space-x-1 text-white bg-violet-500 rounded-t-md">

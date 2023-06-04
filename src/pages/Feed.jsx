@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import Post from '../components/Post/Post';
+import { useEffect } from 'react';
 
 const options = [
 	{
@@ -29,6 +30,12 @@ const Option = ({ label, href }) => {
 };
 
 const Feed = () => {
+	useEffect(() => {
+		document.title = 'Petto - Стрічка новин';
+		return () => {
+			document.title = 'Petto';
+		};
+	}, []);
 	return (
 		<div className="flex space-x-4 max-lg:flex-col-reverse ">
 			<main className="flex-1 space-y-4">

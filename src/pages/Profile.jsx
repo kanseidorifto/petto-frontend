@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import ProfileHeader from '../components/Profile/ProfileHeader';
 import ProfilePetCard from '../components/Profile/ProfilePetCard';
@@ -18,7 +18,16 @@ const Profile = () => {
 	const profileId = own ? userInfo._id : id;
 
 	const profileInfo = useGetUserDetailsQuery(profileId);
-
+	useEffect(() => {
+		document.title =
+			'Petto - Профіль ' +
+			(!own && profileInfo.isSuccess
+				? profileInfo.data.givenName + ' ' + profileInfo.data.surname
+				: '');
+		return () => {
+			document.title = 'Petto';
+		};
+	}, [profileInfo, own]);
 	const profilePetList = useGetUserPetListQuery(profileId);
 
 	if (profileInfo.isFetching || profilePetList.isFetching) {

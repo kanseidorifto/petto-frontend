@@ -10,6 +10,12 @@ import { useGetOwnerDetailsQuery } from '../services/authService';
 Modal.setAppElement('#root');
 
 const Login = () => {
+	useEffect(() => {
+		document.title = 'Petto - Вхід';
+		return () => {
+			document.title = 'Petto';
+		};
+	}, []);
 	const [showModal, setShowModal] = useState({ show: false });
 	const { loading, userToken, error } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();

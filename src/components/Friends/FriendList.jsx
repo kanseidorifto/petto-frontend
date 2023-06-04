@@ -1,8 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 const FriendList = () => {
+	useEffect(() => {
+		document.title = 'Petto - Список друзів';
+		return () => {
+			document.title = 'Petto';
+		};
+	}, []);
 	const [searchText, setSearchText] = useState('');
 	return (
 		<main className="rounded-md bg-violet-400">

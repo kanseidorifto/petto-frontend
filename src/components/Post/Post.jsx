@@ -21,8 +21,6 @@ import {
 	useSendPostLikeMutation,
 } from '../../services/postService';
 
-const backendURL = process.env.REACT_APP_API_URL;
-
 const Post = ({ _id, profileId }) => {
 	const { post } = useGetUserPostListQuery(profileId, {
 		selectFromResult: ({ data }) => ({
@@ -56,7 +54,7 @@ const Post = ({ _id, profileId }) => {
 			<div className="flex items-center px-6 py-4 space-x-2">
 				<Link to={'/profile/' + profile?._id} className="font-black">
 					<img
-						src={backendURL + profile?.avatarUrl}
+						src={profile?.avatarUrl}
 						alt="avatar"
 						className="w-10 h-10 bg-white rounded-full select-none"
 					/>
@@ -89,12 +87,7 @@ const Post = ({ _id, profileId }) => {
 				{mediaLocations?.length > 0 && (
 					<Carousel dynamicHeight showArrows showThumbs={false} showStatus={false}>
 						{mediaLocations.map((media, index) => (
-							<img
-								className="select-none"
-								key={media}
-								src={backendURL + media}
-								alt={`postImage ${index}`}
-							/>
+							<img className="select-none" key={media} src={media} alt={`postImage ${index}`} />
 						))}
 					</Carousel>
 				)}
@@ -126,7 +119,7 @@ const Post = ({ _id, profileId }) => {
 									<div className="flex space-x-2" key={comment._id}>
 										<Link to={'/profile/' + comment.profile?._id} className="font-black">
 											<img
-												src={backendURL + comment.profile?.avatarUrl}
+												src={comment.profile?.avatarUrl}
 												alt="avatar"
 												className="w-8 h-8 bg-white rounded-full select-none"
 											/>
@@ -163,11 +156,7 @@ const Post = ({ _id, profileId }) => {
 					</div>
 				)}
 				<div className="flex items-center space-x-2">
-					<img
-						src={backendURL + userInfo?.avatarUrl}
-						alt="avatar"
-						className="w-10 h-10 bg-white rounded-full"
-					/>
+					<img src={userInfo?.avatarUrl} alt="avatar" className="w-10 h-10 bg-white rounded-full" />
 					<TextareaAutosize
 						className="flex-1 p-1 text-base bg-transparent rounded appearance-none resize-none placeholder:text-white placeholder:font-light focus:bg-violet-300/50 focus:outline-none focus:border-none focus:ring-none"
 						value={commentText}
