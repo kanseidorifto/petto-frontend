@@ -20,6 +20,23 @@ export const postApi = baseApi.injectEndpoints({
 					: // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
 					  [{ type: 'Posts', id: 'LIST' }],
 		}),
+		getPetPostList: builder.query({
+			query: (id) => ({
+				url: `/post/pet/`,
+				method: 'GET',
+				params: { id },
+			}),
+			providesTags: (result) =>
+				// is result available?
+				result
+					? // successful query
+					  [
+							...result.map(({ _id }) => ({ type: 'Posts', id: _id })),
+							{ type: 'Posts', id: 'LIST' },
+					  ]
+					: // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
+					  [{ type: 'Posts', id: 'LIST' }],
+		}),
 		createUserPost: builder.mutation({
 			query: (data) => ({
 				url: `/post/me/`,
@@ -77,6 +94,7 @@ export const postApi = baseApi.injectEndpoints({
 // auto-generated based on the defined endpoints
 export const {
 	useGetUserPostListQuery,
+	useGetPetPostListQuery,
 	useCreateUserPostMutation,
 	useRemoveUserPostMutation,
 	useSendPostLikeMutation,

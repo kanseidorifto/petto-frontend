@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import PetCard from '../components/Pets/PetCard';
 import CreatePetModal from '../components/Pets/CreatePetModal';
+import { useGetUserPetListQuery } from '../services/petService';
+import UpdatePetModal from '../components/Pets/UpdatePetModal';
 
 const Pets = () => {
 	useEffect(() => {
@@ -10,34 +14,74 @@ const Pets = () => {
 			document.title = 'Petto';
 		};
 	}, []);
-	const [showModal, setShowModal] = useState({ show: false });
-	const openModal = () => {
-		setShowModal({ show: true });
+	const [showCreateModal, setShowCreateModal] = useState({ show: false });
+	const [showUpdateModal, setShowUpdateModal] = useState({ show: false });
+	const { userInfo } = useSelector((state) => state.auth);
+	const [urlSearchParams] = useSearchParams();
+	const userId = urlSearchParams.get('userId');
+
+	const own = userInfo._id === userId || !userId;
+	const profileId = own ? userInfo._id : userId;
+	const petList = useGetUserPetListQuery(profileId);
+
+	const openCreateModal = () => {
+		setShowCreateModal({ show: true });
 	};
 
-	const closeModal = () => {
-		setShowModal({ show: false });
+	const closeCreateModal = () => {
+		setShowCreateModal({ show: false });
 	};
+	const openUpdateModal = (pet) => {
+		setShowUpdateModal({ show: true, pet });
+	};
+
+	const closeUpdateModal = () => {
+		setShowUpdateModal({ show: false });
+	};
+
+	if (petList.isFetching) {
+		return <div>Loading...</div>;
+	}
+
 	return (
 		<>
 			<main className="rounded-md bg-violet-400">
 				<div className="flex items-center justify-between px-6 py-3 text-white bg-violet-500 rounded-t-md">
 					<h2 className="text-base font-medium">Улюбленці користувача</h2>
-					<button
-						onClick={openModal}
-						className="px-4 py-2 text-xs font-semibold leading-none rounded-full bg-violet-700">
-						Додати
-					</button>
+					{own && (
+						<button
+							onClick={openCreateModal}
+							className="px-4 py-2 text-xs font-semibold leading-none rounded-full bg-violet-700">
+							Додати
+						</button>
+					)}
 				</div>
 				<div className="p-4 space-y-4">
-					<div className="grid grid-cols-4 gap-4 place-items-center max-lg:grid-cols-2">
-						{new Array(20).fill(0).map((obj, index) => (
-							<PetCard key={index} />
-						))}
-					</div>
+					{petList?.data?.length > 0 ? (
+						<div className="flex flex-wrap justify-center">
+							{petList.data.map((pet) => (
+								<div key={pet._id} className="m-4">
+									<PetCard {...pet} profileId={profileId} openUpdateModal={openUpdateModal} />
+								</div>
+							))}
+						</div>
+					) : (
+						<section className="text-white rounded-md bg-violet-400">
+							<p className="px-6 py-10 text-lg font-medium text-center">
+								{petList.isLoading
+									? 'Завантаження... 🏃‍♂️'
+									: own
+									? 'Схоже у вас поки немає доданих улюбленців 😿'
+									: 'Користувач ще не додав жодного улюбленця 😔'}
+							</p>
+						</section>
+					)}
 				</div>
 			</main>
-			<CreatePetModal modalIsOpen={showModal} closeModal={closeModal} />
+			{own && <CreatePetModal modalIsOpen={showCreateModal} closeModal={closeCreateModal} />}
+			{own && petList?.data?.length > 0 && (
+				<UpdatePetModal modalIsOpen={showUpdateModal} closeModal={closeUpdateModal} />
+			)}
 		</>
 	);
 };

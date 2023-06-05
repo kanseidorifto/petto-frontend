@@ -16,17 +16,25 @@ import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import PostPopup from './PostPopup';
 import {
 	useCancelPostLikeMutation,
+	useGetPetPostListQuery,
 	useGetUserPostListQuery,
 	useSendPostCommentMutation,
 	useSendPostLikeMutation,
 } from '../../services/postService';
 
 const Post = ({ _id, profileId }) => {
-	const { post } = useGetUserPostListQuery(profileId, {
+	const { post: userProfilePost } = useGetUserPostListQuery(profileId, {
 		selectFromResult: ({ data }) => ({
 			post: data?.find((post) => post._id === _id),
 		}),
 	});
+	const { post: petPost } = useGetPetPostListQuery(profileId, {
+		selectFromResult: ({ data }) => ({
+			post: data?.find((post) => post._id === _id),
+		}),
+	});
+	const post = userProfilePost || petPost;
+
 	const [sendLike] = useSendPostLikeMutation();
 	const [cancelLike] = useCancelPostLikeMutation();
 	const [sendComment] = useSendPostCommentMutation();
@@ -76,6 +84,7 @@ const Post = ({ _id, profileId }) => {
 										<EllipsisVerticalIcon className="w-6 h-6" />
 									</button>
 								}
+								closeOnDocumentClick
 								position="bottom right">
 								<PostPopup own={own} postId={_id} />
 							</Popup>

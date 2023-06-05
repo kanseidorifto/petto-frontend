@@ -3,6 +3,7 @@ import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import ChangePhotoModal from './ChangePhotoModal';
 import { useState } from 'react';
 import { useGetOwnerDetailsQuery, useUpdateOwnerDetailsMutation } from '../../services/authService';
+import { dataUrlToFile } from '../../utils/dataUrlToFile';
 
 const ProfilePreferences = () => {
 	const profile = useGetOwnerDetailsQuery();
@@ -58,7 +59,6 @@ const ProfilePreferences = () => {
 				await dataUrlToFile(newCover, `cover-${profile.data._id}.png`, 'image/png'),
 			);
 		updateProfile(formData);
-		console.log('updateProfile', formData);
 	};
 
 	return (
@@ -154,13 +154,6 @@ const ProfilePreferences = () => {
 			<ChangePhotoModal modalIsOpen={showModal} closeModal={closeModal} />
 		</main>
 	);
-};
-
-const dataUrlToFile = async (url, fileName, mimeType) => {
-	const response = await fetch(url);
-	const buffer = await response.arrayBuffer();
-
-	return new File([buffer], fileName, { type: mimeType });
 };
 
 export default ProfilePreferences;

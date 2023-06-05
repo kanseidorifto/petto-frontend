@@ -8,10 +8,13 @@ export const authApi = baseApi.injectEndpoints({
 				url: '/user/me',
 				method: 'GET',
 			}),
-			providesTags: (result) => [
-				{ type: 'Auth', id: 'user-' + result._id },
-				{ type: 'Auth', id: 'userProfileDetails' },
-			],
+			providesTags: (result) =>
+				result
+					? [
+							{ type: 'Auth', id: 'user-' + result._id },
+							{ type: 'Auth', id: 'userProfileDetails' },
+					  ]
+					: [{ type: 'Auth', id: 'userProfileDetails' }],
 		}),
 		getUserDetails: builder.query({
 			query: (id) => ({

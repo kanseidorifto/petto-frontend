@@ -32,6 +32,7 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 		setAvailablePetList(petList);
 	}, [petList]);
 
+	const [openPetPopup, setOpenPetPopup] = useState(false);
 	const [selectedPetList, setSelectedPetList] = useState([]);
 	const addPicturesRef = useRef();
 	const [mediaList, setMediaList] = useState([]);
@@ -130,18 +131,23 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 							<Popup
 								trigger={
 									<button
+										onClick={() => setOpenPetPopup(true)}
 										type="button"
 										className="px-3 py-1 leading-none text-white rounded-full bg-violet-600">
 										Додати
 									</button>
 								}
 								closeOnDocumentClick
+								open={openPetPopup}
+								onOpen={() => setOpenPetPopup(true)}
+								onClose={() => setOpenPetPopup(false)}
 								position="top right">
 								<PetTaggingPopup
 									petList={availablePetList}
 									onClickAddPet={(pet) => {
 										setAvailablePetList((prev) => prev.filter((obj) => obj !== pet));
 										setSelectedPetList((prev) => [...prev, pet]);
+										setOpenPetPopup(false);
 									}}
 								/>
 							</Popup>

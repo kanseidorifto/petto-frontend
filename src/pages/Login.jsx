@@ -3,9 +3,8 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import RegisterModal from '../components/RegisterModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { userLogin } from '../redux/auth/authActions';
-import { useGetOwnerDetailsQuery } from '../services/authService';
 
 Modal.setAppElement('#root');
 
@@ -17,7 +16,7 @@ const Login = () => {
 		};
 	}, []);
 	const [showModal, setShowModal] = useState({ show: false });
-	const { userToken } = useSelector((state) => state.auth);
+	const { userToken, loading } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 	const {
 		register,
@@ -32,14 +31,10 @@ const Login = () => {
 		mode: 'onSubmit',
 		// shouldUseNativeValidation: true,
 	});
-	const navigate = useNavigate();
 
-	// redirect authenticated user to profile screen
-	useEffect(() => {
-		if (userToken) {
-			navigate('/profile');
-		}
-	}, [userToken, navigate]);
+	if (userToken) {
+		return <Navigate to={'/profile'} />;
+	}
 
 	const onSubmit = async (values) => {
 		dispatch(userLogin(values));
@@ -75,8 +70,9 @@ const Login = () => {
 					/>
 					<button
 						type="submit"
+						disabled={loading}
 						className="p-4 text-white border rounded-md border-amber-500 bg-amber-400">
-						Увійти
+						{loading ? 'Завантаження... ' : 'Увійти'}
 					</button>
 					<button
 						type="button"

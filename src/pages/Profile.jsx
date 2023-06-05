@@ -83,7 +83,7 @@ const Profile = () => {
 							)}
 							<div className="text-center">
 								<Link
-									to={'/pets'}
+									to={`/pets?userId=${profileId}`}
 									className="w-64 bg-violet-600 text-white text-xs leading-none p-2.5 rounded-xl">
 									Переглянути більше
 								</Link>
