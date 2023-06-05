@@ -19,7 +19,6 @@ const authSlice = createSlice({
 	reducers: {
 		logout: (state) => {
 			localStorage.removeItem('userToken'); // delete token from storage
-			baseApi.util.resetApiState();
 			state.loading = false;
 			state.userInfo = null;
 			state.userToken = null;
@@ -38,8 +37,10 @@ const authSlice = createSlice({
 		[userLogin.fulfilled]: (state, { payload }) => {
 			state.loading = false;
 			state.success = true; // login successful
+			// store user's token in local storage
 			state.userInfo = payload;
 			state.userToken = payload.token;
+			localStorage.setItem('userToken', payload.token);
 		},
 		[userLogin.rejected]: (state, { payload }) => {
 			state.loading = false;
@@ -56,6 +57,8 @@ const authSlice = createSlice({
 
 			state.userInfo = payload;
 			state.userToken = payload.token;
+			// store user's token in local storage
+			localStorage.setItem('userToken', payload.token);
 		},
 		[registerUser.rejected]: (state, { payload }) => {
 			state.loading = false;

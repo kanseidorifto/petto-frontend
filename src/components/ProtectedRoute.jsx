@@ -3,23 +3,23 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useGetOwnerDetailsQuery } from '../services/authService';
 import { useEffect } from 'react';
 import { logout, setCredentials } from '../redux/auth/authSlice';
+import { baseApi } from '../services/baseService';
 
 const ProtectedRoute = () => {
 	const { userToken, userInfo } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
 
-	const { data, isFetching, isError, isSuccess } = useGetOwnerDetailsQuery(null, {
-		pollingInterval: 0, // 15mins
-	});
+	const { data, isFetching, isError, isSuccess } = useGetOwnerDetailsQuery();
 
 	useEffect(() => {
-		if (data && isSuccess) {
+		if (userToken && data && isSuccess && !isFetching) {
 			dispatch(setCredentials(data));
 		}
-	}, [data, isSuccess, dispatch]);
+	}, [data, isFetching, isSuccess, dispatch, userToken]);
 
 	if (!userToken || isError) {
-		dispatch(logout);
+		dispatch(baseApi.util.resetApiState());
+		dispatch(logout());
 		return <Navigate to={'/sign-in'} replace={true} />;
 	}
 

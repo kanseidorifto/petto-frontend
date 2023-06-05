@@ -13,11 +13,12 @@ export const registerUser = createAsyncThunk(
 				},
 				withCredentials: false,
 			};
-			await axios.post(
+			const { data } = await axios.post(
 				`${backendURL}/auth/register`,
 				{ givenName, surname, email, password },
 				config,
 			);
+			return data;
 		} catch (error) {
 			// return custom error message from backend if present
 			if (error.response && error.response.data.message) {
@@ -38,10 +39,10 @@ export const userLogin = createAsyncThunk(
 				headers: {
 					'Content-Type': 'application/json',
 				},
+				withCredentials: false,
 			};
 			const { data } = await axios.post(`${backendURL}/auth/login`, { email, password }, config);
-			// store user's token in local storage
-			localStorage.setItem('userToken', data.token);
+
 			return data;
 		} catch (error) {
 			// return custom error message from API if any

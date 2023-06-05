@@ -17,11 +17,8 @@ const Login = () => {
 		};
 	}, []);
 	const [showModal, setShowModal] = useState({ show: false });
-	const { loading, userToken, error } = useSelector((state) => state.auth);
+	const { userToken } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
-	const { data, isFetching, isError } = useGetOwnerDetailsQuery(null, {
-		pollingInterval: 900000, // 15mins
-	});
 	const {
 		register,
 		handleSubmit,
@@ -39,13 +36,12 @@ const Login = () => {
 
 	// redirect authenticated user to profile screen
 	useEffect(() => {
-		if (!isFetching && !isError && userToken) {
+		if (userToken) {
 			navigate('/profile');
 		}
-	}, [navigate, isError, isFetching, userToken]);
+	}, [userToken, navigate]);
 
 	const onSubmit = async (values) => {
-		console.log('Login', values);
 		dispatch(userLogin(values));
 	};
 	const openModal = () => {

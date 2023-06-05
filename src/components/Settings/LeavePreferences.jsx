@@ -1,11 +1,16 @@
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/auth/authSlice';
+import { baseApi } from '../../services/baseService';
+import { useNavigate } from 'react-router-dom';
 
 const LeavePreferences = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const handleLogout = () => {
 		if (confirm('Вийти з облікового запису?')) {
+			dispatch(baseApi.util.resetApiState());
 			dispatch(logout());
+			navigate('/sign-in');
 		}
 	};
 
