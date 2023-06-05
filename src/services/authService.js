@@ -8,26 +8,33 @@ export const authApi = baseApi.injectEndpoints({
 				url: '/user/me',
 				method: 'GET',
 			}),
-			providesTags: [{ type: 'Auth', id: 'userProfileDetails' }],
+			providesTags: (result) => [
+				{ type: 'Auth', id: 'user-' + result._id },
+				{ type: 'Auth', id: 'userProfileDetails' },
+			],
 		}),
 		getUserDetails: builder.query({
 			query: (id) => ({
 				url: `/user/${id}`,
 				method: 'GET',
 			}),
+			providesTags: (result) => [{ type: 'Auth', id: 'user-' + result._id }],
 		}),
-		updateUserDetails: builder.mutation({
+		updateOwnerDetails: builder.mutation({
 			query: (details) => ({
 				url: `/user/me`,
 				method: 'PATCH',
 				body: details,
 			}),
-			invalidatesTags: [{ type: 'Auth', id: 'userProfileDetails' }],
+			invalidatesTags: (result) => [
+				{ type: 'Auth', id: 'user-' + result._id },
+				{ type: 'Auth', id: 'userProfileDetails' },
+			],
 		}),
 	}),
 });
 
 // export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetOwnerDetailsQuery, useGetUserDetailsQuery, useUpdateUserDetailsMutation } =
+export const { useGetOwnerDetailsQuery, useGetUserDetailsQuery, useUpdateOwnerDetailsMutation } =
 	authApi;

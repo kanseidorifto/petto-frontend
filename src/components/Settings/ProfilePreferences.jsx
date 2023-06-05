@@ -2,11 +2,11 @@ import { useForm } from 'react-hook-form';
 import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import ChangePhotoModal from './ChangePhotoModal';
 import { useState } from 'react';
-import { useGetOwnerDetailsQuery, useUpdateUserDetailsMutation } from '../../services/authService';
+import { useGetOwnerDetailsQuery, useUpdateOwnerDetailsMutation } from '../../services/authService';
 
 const ProfilePreferences = () => {
 	const profile = useGetOwnerDetailsQuery();
-	const [updateProfile] = useUpdateUserDetailsMutation();
+	const [updateProfile] = useUpdateOwnerDetailsMutation();
 	const {
 		register,
 		handleSubmit,
