@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
-const backendURL = '/api';
+const backendURL = process.env.VITE_APP_API_URL; //'/api';
 
 export const registerUser = createAsyncThunk(
 	'auth/register',
@@ -11,6 +11,7 @@ export const registerUser = createAsyncThunk(
 				headers: {
 					'Content-Type': 'application/json',
 				},
+				withCredentials: false,
 			};
 			await axios.post(
 				`${backendURL}/auth/register`,
