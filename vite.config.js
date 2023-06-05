@@ -9,7 +9,7 @@ export default defineConfig(({ command, mode }) => {
 		server: {
 			proxy: {
 				'/api': {
-					target: process.VITE_APP_API_URL,
+					target: process.env.VITE_APP_API_URL,
 					changeOrigin: true,
 					secure: false,
 					ws: true,
