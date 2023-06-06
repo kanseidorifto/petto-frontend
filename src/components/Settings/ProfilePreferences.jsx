@@ -4,6 +4,7 @@ import ChangePhotoModal from './ChangePhotoModal';
 import { useState } from 'react';
 import { useGetOwnerDetailsQuery, useUpdateOwnerDetailsMutation } from '../../services/authService';
 import { dataUrlToFile } from '../../utils/dataUrlToFile';
+import { toast } from 'react-toastify';
 
 const ProfilePreferences = () => {
 	const profile = useGetOwnerDetailsQuery();
@@ -58,7 +59,11 @@ const ProfilePreferences = () => {
 				'coverMedia',
 				await dataUrlToFile(newCover, `cover-${profile.data._id}.png`, 'image/png'),
 			);
-		updateProfile(formData);
+		toast.promise(updateProfile(formData).unwrap(), {
+			pending: 'Оновлення...',
+			success: 'Профіль успішно оновлений 👌',
+			error: 'Помилка оновлення профілю 🤯',
+		});
 	};
 
 	return (

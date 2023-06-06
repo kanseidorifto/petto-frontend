@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 
 const backendURL = process.env.VITE_APP_API_URL; //'/api';
 
@@ -13,10 +14,13 @@ export const registerUser = createAsyncThunk(
 				},
 				withCredentials: false,
 			};
-			const { data } = await axios.post(
-				`${backendURL}/auth/register`,
-				{ givenName, surname, email, password },
-				config,
+			const { data } = await toast.promise(
+				axios.post(`${backendURL}/auth/register`, { givenName, surname, email, password }, config),
+				{
+					pending: 'Реєстрація...',
+					success: 'Успішно зареєстровано 👌',
+					error: 'Помилка реєстрації 🤯',
+				},
 			);
 			return data;
 		} catch (error) {
@@ -41,7 +45,14 @@ export const userLogin = createAsyncThunk(
 				},
 				withCredentials: false,
 			};
-			const { data } = await axios.post(`${backendURL}/auth/login`, { email, password }, config);
+			const { data } = await toast.promise(
+				axios.post(`${backendURL}/auth/login`, { email, password }, config),
+				{
+					pending: 'Вхід...',
+					success: 'Успішний вхід 👌',
+					error: 'Помилка входу 🤯',
+				},
+			);
 			localStorage.setItem('userToken', data.token);
 			return data;
 		} catch (error) {

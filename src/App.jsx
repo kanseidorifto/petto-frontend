@@ -12,29 +12,34 @@ import FriendListLayout from './layouts/FriendListLayout';
 import Settings from './pages/Settings';
 import SettingsLayout from './layouts/SettingsLayout';
 import ProtectedRoute from './components/ProtectedRoute';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 function App() {
 	return (
-		<Routes>
-			<Route path="/sign-in" element={<Login />} />
-			<Route element={<ProtectedRoute />}>
-				<Route element={<MainLayout />}>
-					<Route path="/profile" element={<Profile />} />
-					<Route path="/profile/:id" element={<Profile />} />
-					<Route path="/feed/*" element={<Feed />} />
-					<Route path="/pets/*" element={<Pets />} />
-					<Route path="/pets/:petId" element={<PetProfile />} />
-					<Route path="/search" element={<Search />} />
+		<>
+			<ToastContainer position="top-right" />
+			<Routes>
+				<Route path="/sign-in" element={<Login />} />
+				<Route element={<ProtectedRoute />}>
+					<Route element={<MainLayout />}>
+						<Route path="/profile" element={<Profile />} />
+						<Route path="/profile/:id" element={<Profile />} />
+						<Route path="/feed/*" element={<Feed />} />
+						<Route path="/pets/*" element={<Pets />} />
+						<Route path="/pets/:petId" element={<PetProfile />} />
+						<Route path="/search" element={<Search />} />
+					</Route>
+					<Route element={<FriendListLayout />}>
+						<Route path="/friends/*" element={<Friends />} />
+					</Route>
+					<Route element={<SettingsLayout />}>
+						<Route path="/settings/*" element={<Settings />} />
+					</Route>
+					<Route path="*" element={<Navigate to={'/profile'} />} />
 				</Route>
-				<Route element={<FriendListLayout />}>
-					<Route path="/friends/*" element={<Friends />} />
-				</Route>
-				<Route element={<SettingsLayout />}>
-					<Route path="/settings/*" element={<Settings />} />
-				</Route>
-				<Route path="*" element={<Navigate to={'/profile'} />} />
-			</Route>
-		</Routes>
+			</Routes>
+		</>
 	);
 }
 

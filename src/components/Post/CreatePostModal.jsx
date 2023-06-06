@@ -8,6 +8,7 @@ import Popup from 'reactjs-popup';
 import { PetTaggingPopup } from '../Pets/PetTagging';
 import { useGetMyPetListQuery } from '../../services/petService';
 import { useCreateUserPostMutation } from '../../services/postService';
+import { toast } from 'react-toastify';
 Modal.setAppElement('#root');
 
 const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
@@ -62,7 +63,11 @@ const CreatePostModal = ({ modalIsOpen, afterOpenModal, closeModal }) => {
 		formData.append('writtenText', values.writtenText);
 		mediaList.forEach((file) => formData.append('mediaList', file));
 		formData.append('taggedPetList', JSON.stringify(taggedPetList));
-		createPost(formData);
+		toast.promise(createPost(formData).unwrap(), {
+			pending: 'Створення допису 📄',
+			success: 'Допис успішно створений 👌',
+			error: 'Помилка створення допису 🤯',
+		});
 		closeOrderModal();
 	};
 

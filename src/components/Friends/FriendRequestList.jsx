@@ -7,6 +7,7 @@ import {
 	useLazyGetFriendRequestListQuery,
 } from '../../services/authService';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const FriendRequestList = () => {
 	const { userInfo } = useSelector((state) => state.auth);
@@ -61,7 +62,13 @@ const FriendRequestList = () => {
 
 	const handleAcceptRequest = async (friend) => {
 		if (confirm('✅ Прийняти запит у друзі від ' + friend.givenName + ' ' + friend.surname + '?'))
-			acceptFriendRequest(friend._id);
+			toast.promise(acceptFriendRequest(friend._id).unwrap(), {
+				pending: `Прийняття запиту у друзі від ${friend.givenName + ' ' + friend.surname} 🧐`,
+				success: `${friend.givenName + ' ' + friend.surname} успішно доданий до друзів 👌`,
+				error: `Помилка прийняття запиту у друзі від ${
+					friend.givenName + ' ' + friend.surname
+				}  🤯`,
+			});
 	};
 	const handleCancelRequest = async (friend, direction) => {
 		if (
@@ -75,7 +82,20 @@ const FriendRequestList = () => {
 					'?',
 			)
 		)
-			cancelFriendRequest(friend._id);
+			toast.promise(cancelFriendRequest(friend._id).unwrap(), {
+				pending:
+					`Відхилення запиту у друзі ` +
+					(direction ? 'від' : 'до') +
+					` ${friend.givenName + ' ' + friend.surname} 🧐`,
+				success:
+					`Запит ` +
+					(direction ? 'від' : 'до') +
+					` ${friend.givenName + ' ' + friend.surname} успішно відхилений 👌`,
+				error:
+					`Помилка відхилення запиту у друзі ` +
+					(direction ? 'від' : 'до') +
+					` ${friend.givenName + ' ' + friend.surname}  🤯`,
+			});
 	};
 
 	return (

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useCancelFriendRequestMutation, useGetFriendListQuery } from '../../services/authService';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const FriendList = () => {
 	const { userInfo } = useSelector((state) => state.auth);
@@ -42,7 +43,11 @@ const FriendList = () => {
 		if (
 			confirm('❌ Видалити' + ' ' + friend.givenName + ' ' + friend.surname + ' із друзів ' + '?')
 		)
-			cancelFriendRequest(friend._id);
+			toast.promise(cancelFriendRequest(friend._id).unwrap(), {
+				pending: `Вилучення ${friend.givenName + ' ' + friend.surname} із списку друзів 😔`,
+				success: `${friend.givenName + ' ' + friend.surname} успішно вилучений із друзів 😒`,
+				error: `Помилка видалення ${friend.givenName + ' ' + friend.surname} із списку друзів 🤯`,
+			});
 	};
 
 	return (

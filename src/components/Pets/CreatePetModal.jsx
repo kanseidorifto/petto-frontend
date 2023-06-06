@@ -7,6 +7,7 @@ import 'cropperjs/dist/cropper.css';
 
 import { dataUrlToFile } from '../../utils/dataUrlToFile';
 import { useCreatePetMutation } from '../../services/petService';
+import { toast } from 'react-toastify';
 
 Modal.setAppElement('#root');
 
@@ -80,7 +81,11 @@ const CreatePetModal = ({ modalIsOpen, closeModal }) => {
 				'avatarMedia',
 				await dataUrlToFile(cropped, `petAvatar-${Math.random(10000000)}.png`, 'image/png'),
 			);
-		createPet(formData);
+		toast.promise(createPet(formData).unwrap(), {
+			pending: `Створення улюбленця ${pet.givenName} 😽`,
+			success: `${pet.givenName} успішно створений 👌`,
+			error: `Помилка створення ${pet.givenName}  🤯`,
+		});
 		closeCurrentModal();
 	};
 

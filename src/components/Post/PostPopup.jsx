@@ -1,10 +1,15 @@
+import { toast } from 'react-toastify';
 import { useRemoveUserPostMutation } from '../../services/postService';
 
 const PostPopup = ({ postId, own }) => {
 	const [removePost] = useRemoveUserPostMutation();
 	const onClickDelete = () => {
 		if (confirm('Видалити допис?')) {
-			removePost(postId);
+			toast.promise(removePost(postId).unwrap(), {
+				pending: 'Видалення допису...',
+				success: 'Допис успішно видалено 👌',
+				error: 'Помилка видалення допису 🤯',
+			});
 		}
 	};
 	return (

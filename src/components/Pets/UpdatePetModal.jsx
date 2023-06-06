@@ -8,6 +8,7 @@ import 'cropperjs/dist/cropper.css';
 import { dataUrlToFile } from '../../utils/dataUrlToFile';
 import { useUpdatePetMutation } from '../../services/petService';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 Modal.setAppElement('#root');
 
@@ -75,7 +76,11 @@ const UpdatePetModal = ({ modalIsOpen, closeModal }) => {
 				'avatarMedia',
 				await dataUrlToFile(cropped, `petAvatar-${Math.random(10000000)}.png`, 'image/png'),
 			);
-		updatePet({ petId: modalIsOpen.pet?._id, data: formData });
+		toast.promise(updatePet({ petId: modalIsOpen.pet?._id, data: formData }).unwrap(), {
+			pending: `Оновлення улюбленця ${pet.givenName} 😺`,
+			success: `${pet.givenName} успішно оновлений 👌`,
+			error: `Помилка оновлення ${pet.givenName}  🤯`,
+		});
 		closeCurrentModal();
 	};
 

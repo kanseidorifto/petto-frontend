@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useSendFriendRequestMutation } from '../../services/authService';
+import { toast } from 'react-toastify';
 
 const ProfileHeader = ({ _id, givenName, surname, bio, avatarUrl, coverUrl, own }) => {
 	const navigate = useNavigate();
@@ -10,7 +11,11 @@ const ProfileHeader = ({ _id, givenName, surname, bio, avatarUrl, coverUrl, own 
 	};
 
 	const onClickSendFriendRequest = () => {
-		sendFriendRequest(_id);
+		toast.promise(sendFriendRequest(_id).unwrap(), {
+			pending: 'Надсилання запиту у друзі...',
+			success: 'Запит успішно надіслано 👌',
+			error: 'Помилка надсилання запиту у друзі. Можливо такий запит уже існує. 🤯',
+		});
 	};
 	return (
 		<div>
