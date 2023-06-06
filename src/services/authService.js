@@ -23,6 +23,16 @@ export const authApi = baseApi.injectEndpoints({
 			}),
 			providesTags: (result) => [{ type: 'Auth', id: 'user-' + result._id }],
 		}),
+		searchUser: builder.query({
+			query: (search) => ({
+				url: `/user/`,
+				method: 'GET',
+				params: {
+					search,
+				},
+			}),
+			providesTags: () => [{ type: 'Auth', id: 'SEARCH' }],
+		}),
 		updateOwnerDetails: builder.mutation({
 			query: (details) => ({
 				url: `/user/me`,
@@ -39,5 +49,9 @@ export const authApi = baseApi.injectEndpoints({
 
 // export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetOwnerDetailsQuery, useGetUserDetailsQuery, useUpdateOwnerDetailsMutation } =
-	authApi;
+export const {
+	useGetOwnerDetailsQuery,
+	useGetUserDetailsQuery,
+	useLazySearchUserQuery,
+	useUpdateOwnerDetailsMutation,
+} = authApi;
