@@ -36,7 +36,6 @@ const Search = () => {
 	const handleSearch = () => {
 		searchUser(searchText);
 	};
-	console.log(initial);
 	return (
 		<main className="rounded-md bg-violet-400">
 			<div className="flex items-center px-6 py-3 space-x-1 text-white bg-violet-500 rounded-t-md">
@@ -79,7 +78,7 @@ const Search = () => {
 					</div>
 				)}
 				{!initial ? (
-					!userList.isFetching && (
+					!userList.isFetching ? (
 						<div className="flex flex-col">
 							{activeTab === 0 && userList.data?.length > 0 ? (
 								userList.data.map((user, index) => (
@@ -102,7 +101,7 @@ const Search = () => {
 									</div>
 								))
 							) : (
-								<p className="px-6 py-10 text-lg font-medium text-center">Нічого не знайдено. 😔</p>
+								<p className="px-6 py-4 text-lg font-medium text-center">Нічого не знайдено. 😔</p>
 							)}
 							{activeTab === 1 &&
 								new Array(10).fill(0).map((obj, index) => (
@@ -134,6 +133,8 @@ const Search = () => {
 									</div>
 								))}
 						</div>
+					) : (
+						<p className="px-6 py-4 text-lg font-medium text-center">Завантаження... 🏃‍♂️</p>
 					)
 				) : (
 					<p className="px-6 py-4 text-lg font-medium text-center">

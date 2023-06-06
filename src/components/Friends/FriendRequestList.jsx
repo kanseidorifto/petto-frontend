@@ -1,18 +1,30 @@
 import { useState, useEffect } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
+import {
+	useAcceptFriendRequestMutation,
+	useCancelFriendRequestMutation,
+	useLazyGetFriendRequestListQuery,
+} from '../../services/authService';
+import { useSelector } from 'react-redux';
 
 const FriendRequestList = () => {
+	const { userInfo } = useSelector((state) => state.auth);
 	const [searchText, setSearchText] = useState('');
 	const [activeTab, setActiveTab] = useState(0);
+	const [getFriendRequestList, friendRequestListQuery] = useLazyGetFriendRequestListQuery();
+	const [acceptFriendRequest] = useAcceptFriendRequestMutation();
+	const [cancelFriendRequest] = useCancelFriendRequestMutation();
 	useEffect(() => {
 		let tab;
 		switch (activeTab) {
 			case 0:
 				tab = 'Вхідні запити';
+				getFriendRequestList('incoming');
 				break;
 			case 1:
 				tab = 'Відправлені запити';
+				getFriendRequestList('outcoming');
 				break;
 			default:
 				tab = '';
@@ -22,7 +34,49 @@ const FriendRequestList = () => {
 		return () => {
 			document.title = 'Petto';
 		};
-	}, [activeTab]);
+	}, [activeTab, getFriendRequestList]);
+
+	const friendList =
+		friendRequestListQuery.isFetching || friendRequestListQuery.isUninitialized
+			? []
+			: searchText !== ''
+			? friendRequestListQuery.data
+					.map((friendRequest) =>
+						friendRequest.profileRequest._id === userInfo._id
+							? friendRequest.profileAccept
+							: friendRequest.profileRequest,
+					)
+					.filter((friend) => {
+						const match =
+							(friend.givenName + ' ' + friend.surname)
+								.toLowerCase()
+								.indexOf(searchText.toLowerCase()) > -1;
+						return match;
+					})
+			: friendRequestListQuery.data.map((friendRequest) =>
+					friendRequest.profileRequest._id === userInfo._id
+						? friendRequest.profileAccept
+						: friendRequest.profileRequest,
+			  );
+
+	const handleAcceptRequest = async (friend) => {
+		if (confirm('✅ Прийняти запит у друзі від ' + friend.givenName + ' ' + friend.surname + '?'))
+			acceptFriendRequest(friend._id);
+	};
+	const handleCancelRequest = async (friend, direction) => {
+		if (
+			confirm(
+				'❌ Відхилити запит у друзі ' +
+					(direction ? 'від' : 'до') +
+					' ' +
+					friend.givenName +
+					' ' +
+					friend.surname +
+					'?',
+			)
+		)
+			cancelFriendRequest(friend._id);
+	};
 
 	return (
 		<main className="rounded-md bg-violet-400">
@@ -55,69 +109,55 @@ const FriendRequestList = () => {
 						Відправлені
 					</button>
 				</div>
-				<div className="flex flex-col">
-					{activeTab === 0 &&
-						new Array(10).fill(0).map((obj, index) => (
-							<div key={index} className="flex w-full px-3 py-2">
-								<div className="flex items-center space-x-3">
-									<Link to={'/profile'}>
-										<img
-											src="https://cdn.discordapp.com/attachments/905893715170697216/1096881731530920077/image.png"
-											alt="avatar"
-											className="w-12 h-12 rounded-full max-w-none"
-										/>
-									</Link>
-									<div>
-										<Link to={'/profile'}>
-											<p>Василь Пупкін</p>
+				{!friendRequestListQuery.isFetching ? (
+					<div className="flex flex-col">
+						{friendList.length > 0 ? (
+							friendList.map((friend, index) => (
+								<div key={index} className="flex w-full px-3 py-2">
+									<div className="flex items-center space-x-3">
+										<Link to={`/profile/${friend._id}`}>
+											<img
+												src={friend.avatarUrl}
+												alt="avatar"
+												className="w-12 h-12 rounded-full max-w-none"
+											/>
 										</Link>
-										<div className="flex flex-wrap items-center">
-											<Link to={'/profile'} className="text-neutral-300 hover:underline">
-												Переглянути профіль
+										<div>
+											<Link className="inline-block" to={`/profile/${friend._id}`}>
+												<p>{friend.givenName + ' ' + friend.surname}</p>
 											</Link>
-											<div className="flex items-center px-4 space-x-2">
-												<button className="p-1 leading-none transition-all border rounded-md border-amber-400 hover:bg-amber-400 bg-amber-300">
-													Прийняти запит
-												</button>
-												<button className="leading-none text-violet-700 hover:underline">
-													Відхилити запит
-												</button>
+											<div className="flex flex-wrap items-center">
+												<Link
+													to={`/profile/${friend._id}`}
+													className="text-neutral-300 hover:underline">
+													Переглянути профіль
+												</Link>
+												<div className="flex items-center px-4 space-x-2">
+													{activeTab === 0 && (
+														<button
+															onClick={() => handleAcceptRequest(friend)}
+															className="p-1 leading-none transition-all border rounded-md border-amber-400 hover:bg-amber-400 bg-amber-300">
+															Прийняти запит
+														</button>
+													)}
+													<button
+														onClick={() => handleCancelRequest(friend, activeTab === 0)}
+														className="leading-none text-violet-700 hover:underline">
+														Відхилити запит
+													</button>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						))}
-					{activeTab === 1 &&
-						new Array(10).fill(0).map((obj, index) => (
-							<div key={index} className="flex w-full px-3 py-2">
-								<div className="flex items-center space-x-3">
-									<Link to={'/profile'}>
-										<img
-											src="https://cdn.discordapp.com/attachments/905893715170697216/1096881731530920077/image.png"
-											alt="avatar"
-											className="w-12 h-12 rounded-full max-w-none"
-										/>
-									</Link>
-									<div>
-										<Link to={'/profile'}>
-											<p>Василь Пупкін</p>
-										</Link>
-										<div className="flex flex-wrap items-center">
-											<Link to={'/profile'} className="text-neutral-300 hover:underline">
-												Переглянути профіль
-											</Link>
-											<div className="flex items-center px-4 space-x-2">
-												<button className="leading-none text-violet-700 hover:underline">
-													Відхилити запит
-												</button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						))}
-				</div>
+							))
+						) : (
+							<p className="px-6 py-4 text-lg font-medium text-center">Нічого не знайдено. 😔</p>
+						)}
+					</div>
+				) : (
+					<p className="px-6 py-4 text-lg font-medium text-center">Завантаження... 🏃‍♂️</p>
+				)}
 			</div>
 		</main>
 	);

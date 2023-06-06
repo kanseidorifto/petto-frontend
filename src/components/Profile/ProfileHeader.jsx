@@ -1,10 +1,16 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSendFriendRequestMutation } from '../../services/authService';
 
-const ProfileHeader = ({ givenName, surname, bio, avatarUrl, coverUrl, own }) => {
+const ProfileHeader = ({ _id, givenName, surname, bio, avatarUrl, coverUrl, own }) => {
 	const navigate = useNavigate();
+	const [sendFriendRequest] = useSendFriendRequestMutation();
 
 	const onClickEditProfile = () => {
 		navigate('/settings/profile');
+	};
+
+	const onClickSendFriendRequest = () => {
+		sendFriendRequest(_id);
 	};
 	return (
 		<div>
@@ -26,11 +32,19 @@ const ProfileHeader = ({ givenName, surname, bio, avatarUrl, coverUrl, own }) =>
 							<p className="text-base font-light leading-none">{bio}</p>
 						</div>
 						<div>
-							{own && (
+							{own ? (
+								<Link to={'/settings/profile'}>
+									<button
+										onClick={onClickEditProfile}
+										className="text-sm leading-none bg-violet-600 min-w-[192px] p-3 rounded-xl">
+										Редагувати профіль
+									</button>
+								</Link>
+							) : (
 								<button
-									onClick={onClickEditProfile}
-									className="text-xs leading-none bg-violet-600 min-w-[192px] p-3 rounded-xl">
-									Редагувати профіль
+									onClick={onClickSendFriendRequest}
+									className="text-sm leading-none border-amber-400 hover:bg-amber-500 bg-amber-400  min-w-[192px] p-3 rounded-xl">
+									Додати друга
 								</button>
 							)}
 						</div>

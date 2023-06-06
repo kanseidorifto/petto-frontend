@@ -44,6 +44,81 @@ export const authApi = baseApi.injectEndpoints({
 				{ type: 'Auth', id: 'userProfileDetails' },
 			],
 		}),
+		getFriendList: builder.query({
+			query: () => ({
+				url: `/user/friends`,
+				method: 'GET',
+			}),
+			providesTags: (result) =>
+				result
+					? [
+							...result.map(({ _id }) => ({ type: 'Friends', id: 'friendRequest-' + _id })),
+							{ type: 'Friends', id: 'LIST' },
+					  ]
+					: [{ type: 'Friends', id: 'LIST' }],
+		}),
+		getFriendRequestList: builder.query({
+			query: (direction) => ({
+				url: `/user/friends/friend-request`,
+				method: 'GET',
+				params: { direction },
+			}),
+			providesTags: (result) =>
+				result
+					? [
+							...result.map(({ _id }) => ({ type: 'Friends', id: 'friendRequest-' + _id })),
+							{ type: 'Friends', id: 'LIST' },
+					  ]
+					: [{ type: 'Friends', id: 'LIST' }],
+		}),
+		sendFriendRequest: builder.mutation({
+			query: (userId) => ({
+				url: `/user/friends/friend-request`,
+				method: 'POST',
+				params: {
+					id: userId,
+				},
+			}),
+			invalidatesTags: (result) =>
+				result
+					? [
+							{ type: 'Friends', id: 'friendRequest-' + result._id },
+							{ type: 'Friends', id: 'LIST' },
+					  ]
+					: [{ type: 'Friends', id: 'LIST' }],
+		}),
+		acceptFriendRequest: builder.mutation({
+			query: (userid) => ({
+				url: `/user/friends/friend-request`,
+				method: 'PATCH',
+				params: {
+					id: userid,
+				},
+			}),
+			invalidatesTags: (result) =>
+				result
+					? [
+							{ type: 'Friends', id: 'friendRequest-' + result._id },
+							{ type: 'Friends', id: 'LIST' },
+					  ]
+					: [{ type: 'Friends', id: 'LIST' }],
+		}),
+		cancelFriendRequest: builder.mutation({
+			query: (userId) => ({
+				url: `/user/friends/friend-request`,
+				method: 'DELETE',
+				params: {
+					id: userId,
+				},
+			}),
+			invalidatesTags: (result) =>
+				result
+					? [
+							{ type: 'Friends', id: 'friendRequest-' + result._id },
+							{ type: 'Friends', id: 'LIST' },
+					  ]
+					: [{ type: 'Friends', id: 'LIST' }],
+		}),
 	}),
 });
 
@@ -54,4 +129,9 @@ export const {
 	useGetUserDetailsQuery,
 	useLazySearchUserQuery,
 	useUpdateOwnerDetailsMutation,
+	useGetFriendListQuery,
+	useLazyGetFriendRequestListQuery,
+	useSendFriendRequestMutation,
+	useAcceptFriendRequestMutation,
+	useCancelFriendRequestMutation,
 } = authApi;
