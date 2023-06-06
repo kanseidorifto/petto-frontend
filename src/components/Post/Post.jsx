@@ -16,6 +16,7 @@ import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import PostPopup from './PostPopup';
 import {
 	useCancelPostLikeMutation,
+	useGetAllPostListQuery,
 	useGetMyFeedPostListQuery,
 	useGetPetPostListQuery,
 	useGetUserPostListQuery,
@@ -39,7 +40,12 @@ const Post = ({ _id, profileId }) => {
 			post: data?.find((post) => post._id === _id),
 		}),
 	});
-	const post = userProfilePost || petPost || feedPost;
+	const { post: allPost } = useGetAllPostListQuery(undefined, {
+		selectFromResult: ({ data }) => ({
+			post: data?.find((post) => post._id === _id),
+		}),
+	});
+	const post = userProfilePost || petPost || feedPost || allPost;
 
 	const [sendLike] = useSendPostLikeMutation();
 	const [cancelLike] = useCancelPostLikeMutation();
@@ -114,6 +120,23 @@ const Post = ({ _id, profileId }) => {
 					</Link>
 					<span> {writtenText}</span>
 				</div>
+				{taggedPets.length > 0 && (
+					<div className="flex flex-wrap">
+						{taggedPets.map((pet, index) => (
+							<Link
+								key={index}
+								to={`/pets/${pet._id}`}
+								className="flex items-center rounded-md hover:bg-violet-300/50 transition-colors max-w-[256px] space-x-2 px-2 py-1">
+								<img
+									className="w-10 h-10 border-2 rounded-full select-none border-amber-400"
+									src={pet.avatarUrl}
+									alt="Pet"
+								/>
+								<span className="text-sm font-normal truncate">{pet.givenName}</span>
+							</Link>
+						))}
+					</div>
+				)}
 				<div className="flex space-x-3">
 					<button onClick={handleLike} className="flex items-center space-x-1">
 						{ownLike ? <HeartIconSolid className="w-6 h-6" /> : <HeartIcon className="w-6 h-6" />}
@@ -156,20 +179,7 @@ const Post = ({ _id, profileId }) => {
 								);
 							})}
 				</div>
-				{taggedPets.length > 0 && (
-					<div className="flex flex-wrap">
-						{taggedPets.map((pet, index) => (
-							<div key={index} className="flex items-center max-w-[256px] space-x-2 mx-2 my-1">
-								<img
-									className="w-10 h-10 border-2 rounded-full select-none border-amber-400"
-									src={pet.avatarUrl}
-									alt="Pet"
-								/>
-								<span className="text-sm font-normal truncate">{pet.givenName}</span>
-							</div>
-						))}
-					</div>
-				)}
+
 				<div className="flex items-center space-x-2">
 					<img src={userInfo?.avatarUrl} alt="avatar" className="w-10 h-10 bg-white rounded-full" />
 					<TextareaAutosize
@@ -186,7 +196,7 @@ const Post = ({ _id, profileId }) => {
 					/>
 					<button
 						onClick={handleSendComment}
-						className="p-2 text-base font-medium rounded-md text-violet-700 hover:bg-violet-300/50">
+						className="p-2 text-base font-medium transition-colors rounded-md text-violet-700 hover:bg-violet-300/50">
 						Опублікувати
 					</button>
 				</div>
