@@ -3,6 +3,38 @@ import { baseApi } from './baseService';
 export const postApi = baseApi.injectEndpoints({
 	reducerPath: 'postApi',
 	endpoints: (builder) => ({
+		getAllPostList: builder.query({
+			query: () => ({
+				url: `/post/feed/all`,
+				method: 'GET',
+			}),
+			providesTags: (result) =>
+				// is result available?
+				result
+					? // successful query
+					  [
+							...result.map(({ _id }) => ({ type: 'Posts', id: _id })),
+							{ type: 'Posts', id: 'LIST' },
+					  ]
+					: // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
+					  [{ type: 'Posts', id: 'LIST' }],
+		}),
+		getMyFeedPostList: builder.query({
+			query: () => ({
+				url: `/post/feed`,
+				method: 'GET',
+			}),
+			providesTags: (result) =>
+				// is result available?
+				result
+					? // successful query
+					  [
+							...result.map(({ _id }) => ({ type: 'Posts', id: _id })),
+							{ type: 'Posts', id: 'LIST' },
+					  ]
+					: // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
+					  [{ type: 'Posts', id: 'LIST' }],
+		}),
 		getUserPostList: builder.query({
 			query: (id) => ({
 				url: `/post/user/`,
@@ -93,6 +125,8 @@ export const postApi = baseApi.injectEndpoints({
 // export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
 export const {
+	useGetAllPostListQuery,
+	useGetMyFeedPostListQuery,
 	useGetUserPostListQuery,
 	useGetPetPostListQuery,
 	useCreateUserPostMutation,

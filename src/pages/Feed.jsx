@@ -1,6 +1,9 @@
 import { NavLink } from 'react-router-dom';
 import Post from '../components/Post/Post';
 import { useEffect } from 'react';
+import FeedPostList from '../components/Post/FeedPostList';
+import { useState } from 'react';
+import AllPostList from '../components/Post/AllPostList';
 
 const options = [
 	{
@@ -30,6 +33,7 @@ const Option = ({ label, href }) => {
 };
 
 const Feed = () => {
+	const [activeTab, setActiveTab] = useState(0);
 	useEffect(() => {
 		document.title = 'Petto - Стрічка новин';
 		return () => {
@@ -39,18 +43,15 @@ const Feed = () => {
 	return (
 		<div className="flex space-x-4 max-lg:flex-col-reverse ">
 			<main className="flex-1 space-y-4">
-				<section className="text-white rounded-md bg-violet-400">
-					<p className="px-6 py-10 text-lg font-medium text-center">
-						{true ? 'Завантаження... 🏃‍♂️' : 'Схоже у вас поки немає дописів 😿'}
-					</p>
-				</section>
+				{activeTab === 0 && <FeedPostList />}
+				{activeTab === 1 && <AllPostList />}
 			</main>
 			<div>
 				<aside className="inline-block w-64 text-white rounded-md bg-violet-400">
 					<nav>
 						<ul className="p-3 space-y-3 text-base leading-none">
 							{options.map((option, index) => (
-								<li key={index}>
+								<li key={index} onClick={() => setActiveTab(index)}>
 									<Option {...option} />
 								</li>
 							))}

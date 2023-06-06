@@ -16,6 +16,7 @@ import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import PostPopup from './PostPopup';
 import {
 	useCancelPostLikeMutation,
+	useGetMyFeedPostListQuery,
 	useGetPetPostListQuery,
 	useGetUserPostListQuery,
 	useSendPostCommentMutation,
@@ -33,7 +34,12 @@ const Post = ({ _id, profileId }) => {
 			post: data?.find((post) => post._id === _id),
 		}),
 	});
-	const post = userProfilePost || petPost;
+	const { post: feedPost } = useGetMyFeedPostListQuery(undefined, {
+		selectFromResult: ({ data }) => ({
+			post: data?.find((post) => post._id === _id),
+		}),
+	});
+	const post = userProfilePost || petPost || feedPost;
 
 	const [sendLike] = useSendPostLikeMutation();
 	const [cancelLike] = useCancelPostLikeMutation();
